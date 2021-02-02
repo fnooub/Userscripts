@@ -15,7 +15,7 @@
 // @require         https://unpkg.com/jszip@3.1.5/dist/jszip.min.js
 // @require         https://unpkg.com/file-saver@2.0.2/dist/FileSaver.min.js
 // @require         https://unpkg.com/ejs@2.7.4/ejs.min.js
-// @require         https://unpkg.com/jepub2@2.1.4/dist/jepub.min.js
+// @require         https://unpkg.com/jepub3@2.1.5/dist/jepub.min.js
 // @require         https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js?v=a834d46
 // @noframes
 // @connect         self
@@ -55,6 +55,16 @@
   ];
 
   /* === DO NOT CHANGE CODE BELOW THIS LINE === */
+
+  function html2text(html, noBr = false) {
+    if (noBr) {
+      html = jEpub.html2text(html, true);
+    } else {
+      html = jEpub.html2text(html);
+      html = html.replace(/\n/g, '<br />');
+    }
+    return html;
+  }
 
   function cleanHtml(str) {
     citeSources.forEach(function (source) {
@@ -253,6 +263,9 @@
     $ebookType.each(function () {
       ebookType.push($(this).text().trim());
     });
+
+  ebookDesc = html2text(ebookDesc);
+  //console.log(ebookDesc);
 
   jepub = new jEpub();
   jepub

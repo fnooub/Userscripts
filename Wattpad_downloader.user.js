@@ -18,7 +18,8 @@
 // @require         https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js?v=a834d46
 // @noframes
 // @connect         self
-// @connect         img.wattpad.com
+// @connect         wattpad.com
+// @connect         herokuapp.com
 // @supportURL      https://github.com/lelinhtinh/Userscript/issues
 // @run-at          document-idle
 // @grant           GM_xmlhttpRequest
@@ -34,6 +35,7 @@
    * @type {Boolean}
    */
   var errorAlert = true;
+  var bookCover = false;
 
   /**
    * Những đoạn ghi chú nguồn truyện
@@ -251,7 +253,7 @@
     endDownload = false,
     ebookTitle = $('h1').text().trim(),
     ebookAuthor = $('.cover img').text().trim(),
-    ebookCover = $('.books img').attr('src'),
+    ebookCover = $('.cover img').attr('src'),
     ebookDesc = $('.description').html(),
     ebookType = [],
     beginEnd = '',
@@ -259,11 +261,12 @@
     host = location.host,
     pathname = location.pathname,
     referrer = location.protocol + '//' + host + pathname,
-    ebookFilename = pathname.slice(7) + '.epub',
+    ebookFilename = ebookTitle + '.epub',
+    // ebookFilename = pathname.slice(7) + '.epub',
     credits =
       '<p>Truyện được tải từ <a href="' +
       referrer +
-      '">Wattpad</a></p><p>Userscript được viết bởi: <a href="https://lelinhtinh.github.io/jEpub/">Zzbaivong</a></p>',
+      '">Wattpad</a></p><p>Ebook được tạo bởi: <a href="https://www.npmjs.com/package/jepub3">Fnooub</a></p>',
     jepub;
 
   if (!$novelInfo.length) return;
@@ -274,8 +277,12 @@
       ebookType.push($(this).text().trim());
     });
 
+  // edit info ebook
+  ebookTitle = ebookTitle.replace(/\[.+?\]/g, '').trim();
   ebookDesc = html2text(ebookDesc);
-  //console.log(ebookDesc);
+  ebookCover = ebookCover.replace('-176-', '-');
+  //console.log(ebookCover);
+  if (bookCover) ebookCover = 'http://eakar.herokuapp.com/biasach.php?jpg&tp=' + ebookTitle + '&tg=' + ebookAuthor;
 
   jepub = new jEpub();
   jepub
@@ -289,7 +296,7 @@
     })
     .uuid(referrer);
 
-  $download.insertAfter('.cover');
+  $download.insertAfter('.story-controls');
   $download.before('\r\n');
   $download.one('click contextmenu', function (e) {
     e.preventDefault();

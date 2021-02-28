@@ -105,15 +105,15 @@
 
                 var chapter = $chapter.html().match(/var initialValue = \[(.+?)\];/)[1];
                 var items = JSON.parse("[" + chapter + "]");
-                var copy = [];
+                var content = [];
 
                 items.forEach(function(item){
-                  copy.push(item.replaceAll('\\', ''));
+                  content.push(item.replaceAll('\\', ''));
                 });
 
-                //console.log(copy);
+                //console.log(content);
                 txt += LINE2 + chapTitle.toUpperCase() + LINE;
-                txt += copy.join('\n');
+                txt += content.join('\n');
                 //txt += items;
 
                 count++;
@@ -181,7 +181,7 @@
             chapList.push($(this).attr('href'));
         });
 
-        console.log(chapList);
+        //console.log(chapList);
 
         if (e.type === 'contextmenu') {
             $download.off('click');

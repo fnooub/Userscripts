@@ -108,6 +108,8 @@
                 } else {
                     $downloadStatus('yellow');
 
+                    if ($notContent.length) $notContent.remove();
+
                     $chapter = $chapter.html().replace(/\r?\n+/g, ' ');
                     $chapter = $chapter.replace(/<br\s*[\/]?>/gi, '\n');
                     $chapter = $chapter.replace(/<(p|div)[^>]*>/gi, '').replace(/<\/(p|div)>/gi, '\n\n');

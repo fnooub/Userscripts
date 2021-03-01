@@ -108,12 +108,12 @@
                 var content = [];
 
                 items.forEach(function(item){
-                  content.push(item.replaceAll('\\', ''));
+                  content.push(item.replaceAll('\\', '').trim());
                 });
 
                 //console.log(content);
                 txt += LINE2 + chapTitle.toUpperCase() + LINE;
-                txt += content.join('\n');
+                txt += content.join('\n').replace(/(?:!\[(.*?)\]\((.*?)\))/g, '');
                 //txt += items;
 
                 count++;
@@ -186,7 +186,7 @@
         if (e.type === 'contextmenu') {
             $download.off('click');
             var startFrom = prompt('Nhập ID chương truyện bắt đầu tải:', chapList[0]);
-            startFrom = chapList.indexOf(startFrom);
+            startFrom = chapList.indexOf(startFrom.replace(location.origin, ''));
             if (startFrom !== -1) chapList = chapList.slice(startFrom);
         } else {
             $download.off('contextmenu');

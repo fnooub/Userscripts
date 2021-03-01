@@ -9,7 +9,8 @@
 // @author          Fnooub
 // @oujs:author     baivong
 // @license         MIT; https://baivong.mit-license.org/license.txt
-// @match           https://mangatoon.mobi/vi/detail/*/episodes
+// @match           *://mangatoon.mobi/vi/detail/*/episodes
+// @match           *://www.mangatoon.mobi/vi/detail/*/episodes
 // @require         https://code.jquery.com/jquery-3.5.1.min.js
 // @require         https://unpkg.com/jszip@3.1.5/dist/jszip.min.js
 // @require         https://unpkg.com/file-saver@2.0.2/dist/FileSaver.min.js
@@ -53,6 +54,26 @@
 	];
 
 	/* === DO NOT CHANGE CODE BELOW THIS LINE === */
+
+    function to_slug(str)
+    {
+        // Chuyển hết sang chữ thường
+        str = str.toLowerCase();     
+
+        // xóa dấu
+        str = str.replace(/(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)/g, 'a');
+        str = str.replace(/(è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ)/g, 'e');
+        str = str.replace(/(ì|í|ị|ỉ|ĩ)/g, 'i');
+        str = str.replace(/(ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ)/g, 'o');
+        str = str.replace(/(ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ)/g, 'u');
+        str = str.replace(/(ỳ|ý|ỵ|ỷ|ỹ)/g, 'y');
+        str = str.replace(/(đ)/g, 'd');
+
+        // Xóa ký tự đặc biệt
+        str = str.replace(/[^a-z0-9]/g, ' ').trim();
+        // loại bỏ 2 khoảng trắng trở lên
+        return str.replace(/\s+/g, '-');
+    }
 
 	function html2text(html, noBr = false) {
 		if (noBr) {
@@ -187,17 +208,14 @@
 						chapContent = downloadError('Nội dung không có');
 					} else {
 						if (status !== 'red') downloadStatus('yellow');
-						var content = $chapter.html().match(/var initialValue = \[(.+?)\];/)[1];
-						var items = JSON.parse("[" + content + "]");
+						var chapter = $chapter.html().match(/var initialValue = \[(.+?)\];/)[1];
+						var content = JSON.parse("[" + chapter + "]");
 
-						var chapPush = [];
-						items.forEach(function(item){
-							chapPush.push(item.replaceAll('\\', '').trim());
-						});
-
-						chapContent = chapPush.join('<br />');
+						chapContent = content.join('<br />');
+						chapContent = chapContent.replace(/\\/g, '');
 						chapContent = chapContent.replace(/(?:!\[(.*?)\]\((.*?)\))/g, '');
 						chapContent = chapContent.replace(/(<br \/><br \/>)+/g, '<br /><br />');
+						chapContent = cleanHtml(chapContent);
 					}
 				}
 
@@ -260,7 +278,7 @@
 		host = location.host,
 		pathname = location.pathname,
 		referrer = location.protocol + '//' + host + pathname,
-		ebookFilename = ebookTitle + '.epub',
+		ebookFilename = to_slug(ebookTitle) + '.epub',
 		credits =
 			'<p>Truyện được tải từ <a href="' +
 			referrer +

@@ -4,7 +4,8 @@
 // @version      0.1
 // @description  try to take over the world!
 // @author       You
-// @match        https://mangatoon.mobi/vi/detail/*/episodes
+// @match        *://mangatoon.mobi/vi/detail/*/episodes
+// @match        *://www.mangatoon.mobi/vi/detail/*/episodes
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js
 // @noframes
 // @connect      self
@@ -21,7 +22,7 @@
      *                1 : Error
      *                2 : Info + Error
      */
-    var debugLevel = 2;
+    var debugLevel = 0;
 
     function downloadFail(err) {
         $downloadStatus('red');
@@ -97,24 +98,22 @@
 
                 var $data = $(response),
                     $chapter = $data.find('script:eq(8)'),
-                    $notContent = $chapter.find('iframe, script, style, center:has(strong)');
+                    $notContent = $chapter.find('iframe, script, style');
 
                 if (endDownload) return;
                 
                 chapTitle = $data.find('span.title').text().trim();
 
                 var chapter = $chapter.html().match(/var initialValue = \[(.+?)\];/)[1];
-                var items = JSON.parse("[" + chapter + "]");
-                var content = [];
+                var content = JSON.parse("[" + chapter + "]");
+                var chapContent = content.join('\n');
+                	chapContent = chapContent.replace(/^ +/gm, '');
+                	chapContent = chapContent.replace(/\\/g, '');
+                	chapContent = chapContent.replace(/(?:!\[(.*?)\]\((.*?)\))/g, '');
+                	chapContent = chapContent.replace(/\n{3,}/g, '\n\n');
 
-                items.forEach(function(item){
-                  content.push(item.replaceAll('\\', '').trim());
-                });
-
-                //console.log(content);
                 txt += LINE2 + chapTitle.toUpperCase() + LINE;
-                txt += content.join('\n').replace(/(?:!\[(.*?)\]\((.*?)\))/g, '');
-                //txt += items;
+                txt += chapContent;
 
                 count++;
 

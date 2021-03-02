@@ -60,7 +60,6 @@
 			html = jEpub.html2text(html, true);
 		} else {
 			html = jEpub.html2text(html);
-			html = html.replace(/\n/g, '<br />');
 		}
 		return html;
 	}
@@ -280,9 +279,11 @@
 			i18n: 'vi',
 			title: ebookTitle,
 			author: ebookAuthor,
-			publisher: 'SachVe.com',
+			publisher: host,
+			description: ebookDesc,
+			tags: ebookType,
 		})
-		.uuid();
+		.uuid(referrer);
 
 	$download.insertAfter('#topVoteBtn');
 	$download.before('\r\n');

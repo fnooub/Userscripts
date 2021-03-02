@@ -23,6 +23,12 @@
      */
     var debugLevel = 0;
 
+    function cleanHtml(str) {
+        str = str.replace(/\s*Chương\s*\d+\s?:[^<\n]/, '');
+        str = str.replace(/[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD\u10000-\u10FFFF]+/gm, ''); // eslint-disable-line
+        return str;
+    }
+
     function downloadFail(err) {
         $downloadStatus('red');
         titleError.push(chapTitle);
@@ -115,7 +121,7 @@
                     $chapter = $chapter.replace(/^ +/gm, '');
 
                     txt += LINE2 + chapTitle.toUpperCase() + LINE;
-                    txt += $chapter;
+                    txt += cleanHtml($chapter);
                 }
 
                 count++;

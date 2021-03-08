@@ -200,12 +200,12 @@
 			getContent();
 
 			$win.on('beforeunload', function() {
-					return 'Truyện đang được tải xuống...';
+				return 'Truyện đang được tải xuống...';
 			});
 
 			$download.one('click', function(e) {
-					e.preventDefault();
-					saveEbook();
+				e.preventDefault();
+				saveEbook();
 			});
 		}
 

@@ -26,7 +26,9 @@
 	function cleanHtml(str) {
 		str = str.replace(/\s*Chương\s*\d+\s?:[^<\n]/, '');
 		str = str.replace(/[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD\u10000-\u10FFFF]+/gm, ''); // eslint-disable-line
-		str = str.replace(/\.(?:\s*\.)+/g, '...');
+		str = str.replace(/\!(?:\s*\!)+/g, '!!!');
+		str = str.replace(/\!(?:\s*\!)+/g, '!!!');
+		str = str.replace(/ +(\.|\?|!|,)/g, '$1');
 		return str;
 	}
 
@@ -90,7 +92,7 @@
 
 				var $data = $(response),
 					$chapter = $data.find('#js-read__content'),
-					$notContent = $chapter.find('iframe, script, style, div, a');
+					$notContent = $chapter.find('iframe, script, style, div');
 
 				if (endDownload) return;
 				
@@ -104,14 +106,13 @@
 					txt += LINE2 + chapTitle.toUpperCase() + LINE;
 					
 					if ($notContent.length) $notContent.remove();
-					
+
 					$chapter = $chapter.html().replace(/\r?\n+/g, ' ');
 					$chapter = $chapter.replace(/<br\s*[\/]?>/gi, '\n');
-					$chapter = $chapter.replace(/<(p|div)[^>]*>/gi, '').replace(/<\/(p|div)>/gi, '\n\n');
-					$chapter = $($.parseHTML($chapter));
+					$chapter = $chapter.replace(/<p[^>]*>/gi, '').replace(/<\/p>/gi, '\n\n');
+					$chapter = $chapter.replace(/^.*(https?:\/\/[^\s]+).*$/gm, '');
 
-					txt += cleanHtml($chapter.text()).trim().replace(/\n{2,}/g, '\n\n') + '\n\n---o0o---';
-
+					txt += cleanHtml($chapter).trim().replace(/\n{2,}/g, '\n\n') + '\n\n---o0o---';
 
 					count++;
 
@@ -167,18 +168,19 @@
 		chapListSize = 0,
 		titleError = [];
 
+	var chapCount = $('.font-weight-semibold.mb-1:first').text().trim();
+	for (var i = 1; i <= chapCount; i++) {
+		chapList.push(location.href + '/chuong-' + i);
+	}
+
+	if (!chapList.length) return;
+	if (debugLevel == 2) console.log(chapList);
+
 	$download.insertAfter('h1');
 
 	$download.one('click contextmenu', function (e) {
 		e.preventDefault();
 		document.title = '[...] Vui lòng chờ trong giây lát';
-
-		var chapCount = $('.font-weight-semibold.mb-1:first').text().trim();
-		for (var i = 1; i <= chapCount; i++) {
-			chapList.push(location.href + '/chuong-' + i);
-		}
-
-		if (debugLevel == 2) console.log(chapList);
 
 		if (e.type === 'contextmenu') {
 			$download.off('click');

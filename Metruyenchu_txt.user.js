@@ -29,7 +29,12 @@
 		str = str.replace(/\!(?:\s*\!)+/g, '!!!');
 		str = str.replace(/\!(?:\s*\!)+/g, '!!!');
 		str = str.replace(/ +(\.|\?|!|,)/g, '$1');
+		str = str.replace(/(\d)\. +(\d)/g, '$1.$2');
 		return str;
+	}
+
+	function cleanTitle(str) {
+		return str.replace(/ \(.+/, '');
 	}
 
 	function downloadFail(err) {
@@ -103,7 +108,7 @@
 				} else {
 					$downloadStatus('yellow');
 
-					txt += LINE2 + chapTitle.toUpperCase() + LINE;
+					txt += LINE2 + cleanTitle(chapTitle).toUpperCase() + LINE;
 					
 					if ($notContent.length) $notContent.remove();
 

@@ -14,7 +14,7 @@
 // @require         https://unpkg.com/jszip@3.1.5/dist/jszip.min.js
 // @require         https://unpkg.com/file-saver@2.0.2/dist/FileSaver.min.js
 // @require         https://unpkg.com/ejs@2.7.4/ejs.min.js
-// @require         https://unpkg.com/jepub3@2.1.5/dist/jepub.min.js
+// @require         https://unpkg.com/jsepub/dist/jepub.min.js
 // @require         https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js?v=a834d46
 // @noframes
 // @connect         self

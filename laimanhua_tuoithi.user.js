@@ -14,10 +14,11 @@
 
     var chapter = $('body').html().match(/"path":"(.+?)"/)[1];
     var firstLink = 'https://mhpic5.kingwar.cn' + chapter + '0001.jpg';
+    firstLink = encodeURI(firstLink);
     console.log(firstLink);
 
 	var $download = $('<a></a>', {
-			href: firstLink,
+			href: 'http://eapal.herokuapp.com/laimanhua.php?link=' + firstLink,
 			style: 'background-color:lightblue; padding: 5px',
 			text: 'Tải xuống',
 		});

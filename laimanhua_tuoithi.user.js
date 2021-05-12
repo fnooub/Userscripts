@@ -19,9 +19,9 @@
 
 	var $download = $('<a></a>', {
 			href: 'http://eapal.herokuapp.com/laimanhua.php?link=' + firstLink,
-			style: 'background-color:lightblue; padding: 5px',
+			style: 'background-color:lightblue; padding: 15px; margin: 50px;display: block;',
 			text: 'Tải xuống',
 		});
-	$download.insertAfter('header');
+	$download.insertAfter('nav');
 
 })(jQuery, window, document);

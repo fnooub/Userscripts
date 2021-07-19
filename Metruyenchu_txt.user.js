@@ -26,7 +26,7 @@
 	function cleanHtml(str) {
 		str = str.replace(/\s*Chương\s*\d+\s?:[^<\n]/, '');
 		str = str.replace(/[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD\u10000-\u10FFFF]+/gm, ''); // eslint-disable-line
-		str = str.replace(/\!(?:\s*\!)+/g, '!!!');
+		str = str.replace(/\.(?:\s*\.)+/g, '...');
 		str = str.replace(/\!(?:\s*\!)+/g, '!!!');
 		str = str.replace(/ +(\.|\?|!|,)/g, '$1');
 		str = str.replace(/(\d)\. +(\d)/g, '$1.$2');
